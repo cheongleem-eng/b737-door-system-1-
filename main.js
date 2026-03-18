@@ -45,20 +45,32 @@ let mode = ''; let input = ''; let selectedTitle = '';
 const lcdText = document.getElementById('lcd-text');
 const volDisplay = document.getElementById('vol-display');
 const audio = new Audio();
-audio.volume = 0.5; // 기본 셋팅값 50%
 
-function changeVolume(amount) {
-    // 0.1(10%) 단위로 정교하게 계산 (부동 소수점 오차 방지)
-    let currentVol = Math.round(audio.volume * 10);
-    let step = amount > 0 ? 1 : -1;
-    let newVolValue = Math.min(10, Math.max(0, currentVol + step)) / 10;
+// 볼륨을 정수(0~10)로 관리하여 오차 방지
+let currentVolumeLevel = 5; 
+audio.volume = currentVolumeLevel / 10;
+
+function changeVolume(direction) {
+    // direction이 1이면 증가, -1이면 감소
+    if (direction > 0) {
+        if (currentVolumeLevel < 10) currentVolumeLevel++;
+    } else {
+        if (currentVolumeLevel > 0) currentVolumeLevel--;
+    }
     
-    audio.volume = newVolValue; // 실제 음향 조절
-    volDisplay.innerText = `[VOL: ${Math.round(newVolValue * 100)}%]`;
+    // 실제 오디오 객체에 반영 (0.0 ~ 1.0)
+    audio.volume = currentVolumeLevel / 10;
+    
+    // 화면 표시 (0% ~ 100%)
+    if (volDisplay) {
+        volDisplay.innerText = `[VOL: ${currentVolumeLevel * 10}%]`;
+    }
     
     const volLed = document.getElementById('led-vol');
-    volLed.classList.add('led-yellow');
-    setTimeout(() => volLed.classList.remove('led-yellow'), 200);
+    if (volLed) {
+        volLed.classList.add('led-yellow');
+        setTimeout(() => volLed.classList.remove('led-yellow'), 200);
+    }
 }
 
 function setMode(m) {
@@ -66,7 +78,8 @@ function setMode(m) {
     document.querySelectorAll('.led-dot').forEach(l => {
         if(l.id !== 'led-ready') l.classList.remove('led-yellow', 'led-red');
     });
-    document.getElementById('led-' + m.toLowerCase()).classList.add('led-yellow');
+    const modeLed = document.getElementById('led-' + m.toLowerCase());
+    if (modeLed) modeLed.classList.add('led-yellow');
     
     if(m === 'ANNC') lcdText.innerText = "SINGLE ANNC\n# _ _ _\nCANCEL:STOP";
     else if(m === 'MUSIC') lcdText.innerText = "BOARDING MUSIC\n# _\nCANCEL:STOP";
@@ -90,22 +103,24 @@ function pressNum(n) {
 function pressEnt() {
     if (selectedTitle && selectedTitle !== "INVALID NUMBER") {
         lcdText.innerText = `[${input}]\n${selectedTitle}\nPLAY:START NEXT:ENT`;
-        document.getElementById('led-ent').classList.add('led-yellow');
-        setTimeout(() => document.getElementById('led-ent').classList.remove('led-yellow'), 200);
+        const entLed = document.getElementById('led-ent');
+        if (entLed) {
+            entLed.classList.add('led-yellow');
+            setTimeout(() => entLed.classList.remove('led-yellow'), 200);
+        }
     }
 }
 
 function startPlay() {
     if (!selectedTitle || selectedTitle === "INVALID NUMBER") return;
     
-    // 로컬 오디오 폴더의 파일을 호출합니다.
     audio.src = `audio/${input}.mp3`;
     
     audio.play().then(() => {
-        document.getElementById('led-start').classList.add('led-red');
+        const startLed = document.getElementById('led-start');
+        if (startLed) startLed.classList.add('led-red');
         lcdText.innerHTML = `[${input}] ${selectedTitle}\n\n<span class="playing-blink">● PLAYING</span>`;
     }).catch(() => {
-        // 파일이 없을 경우 출력되는 에러 메시지
         lcdText.innerText = "FILE NOT FOUND\nCheck audio folder";
     });
 }
@@ -119,10 +134,10 @@ function stopAll() {
     lcdText.innerText = "AIRLINE JJA\nCARD ID 002";
 }
 
-// 초기 로드 시 Ready LED 및 볼륨 표시 설정
 window.onload = () => {
-    document.getElementById('led-ready').classList.add('led-yellow');
+    const readyLed = document.getElementById('led-ready');
+    if (readyLed) readyLed.classList.add('led-yellow');
     if (volDisplay) {
-        volDisplay.innerText = `[VOL: ${Math.round(audio.volume * 100)}%]`;
+        volDisplay.innerText = `[VOL: ${currentVolumeLevel * 10}%]`;
     }
 };
