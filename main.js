@@ -45,16 +45,16 @@ let mode = ''; let input = ''; let selectedTitle = '';
 const lcdText = document.getElementById('lcd-text');
 const volDisplay = document.getElementById('vol-display');
 const audio = new Audio();
-audio.volume = 0.5;
+audio.volume = 0.5; // 기본 셋팅값 50%
 
 function changeVolume(amount) {
     // 0.1(10%) 단위로 정교하게 계산 (부동 소수점 오차 방지)
     let currentVol = Math.round(audio.volume * 10);
     let step = amount > 0 ? 1 : -1;
-    let newVol = Math.min(10, Math.max(0, currentVol + step)) / 10;
+    let newVolValue = Math.min(10, Math.max(0, currentVol + step)) / 10;
     
-    audio.volume = newVol;
-    volDisplay.innerText = `[VOL: ${Math.round(newVol * 100)}%]`;
+    audio.volume = newVolValue; // 실제 음향 조절
+    volDisplay.innerText = `[VOL: ${Math.round(newVolValue * 100)}%]`;
     
     const volLed = document.getElementById('led-vol');
     volLed.classList.add('led-yellow');
@@ -119,7 +119,10 @@ function stopAll() {
     lcdText.innerText = "AIRLINE JJA\nCARD ID 002";
 }
 
-// 초기 로드 시 Ready LED 켜기
+// 초기 로드 시 Ready LED 및 볼륨 표시 설정
 window.onload = () => {
     document.getElementById('led-ready').classList.add('led-yellow');
+    if (volDisplay) {
+        volDisplay.innerText = `[VOL: ${Math.round(audio.volume * 100)}%]`;
+    }
 };
