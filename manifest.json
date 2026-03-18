@@ -1,0 +1,15 @@
+{
+  "short_name": "B737 Door",
+  "name": "B737 Door System Control Panel",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/753/753304.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#2a2a2a",
+  "background_color": "#2a2a2a"
+}
