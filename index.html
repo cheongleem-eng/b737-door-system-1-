@@ -1,14 +1,83 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PES Control Panel - B737 Door System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+
+<div class="panel-main p-12 rounded-[60px]">
+    <div id="lcd-container" class="lcd-screen p-8 rounded-xl mb-10 h-48 lcd-font text-4xl leading-tight whitespace-pre flex flex-col justify-center">
+        <div id="vol-display" class="absolute top-3 right-5 text-2xl">[VOL: 50%]</div>
+        <div id="lcd-text">AIRLINE JJA
+CARD ID 002</div>
+    </div>
+
+    <div class="flex items-start justify-between gap-6">
+        <div class="inner-frame grid grid-cols-3 gap-4 w-60">
+            <button onclick="pressNum('1')" class="hw-btn aspect-square text-2xl">1</button>
+            <button onclick="pressNum('2')" class="hw-btn aspect-square text-2xl">2</button>
+            <button onclick="pressNum('3')" class="hw-btn aspect-square text-2xl">3</button>
+            <button onclick="pressNum('4')" class="hw-btn aspect-square text-2xl">4</button>
+            <button onclick="pressNum('5')" class="hw-btn aspect-square text-2xl">5</button>
+            <button onclick="pressNum('6')" class="hw-btn aspect-square text-2xl">6</button>
+            <button onclick="pressNum('7')" class="hw-btn aspect-square text-2xl">7</button>
+            <button onclick="pressNum('8')" class="hw-btn aspect-square text-2xl">8</button>
+            <button onclick="pressNum('9')" class="hw-btn aspect-square text-2xl">9</button>
+            <div class="aspect-square"></div>
+            <button onclick="pressNum('0')" class="hw-btn aspect-square text-2xl">0</button>
+            <button onclick="pressEnt()" class="hw-btn aspect-square text-sm flex flex-col items-center justify-center">ENT <div id="led-ent" class="led-dot mt-2"></div></button>
+        </div>
+
+        <div class="flex flex-col gap-3 w-56">
+            <div class="inner-frame flex flex-col gap-3">
+                <button onclick="setMode('ANNC')" class="hw-btn py-3 text-xs flex justify-between px-4 items-center uppercase">
+                    <div class="led-dot"></div> ANNC <div id="led-annc" class="led-dot"></div>
+                </button>
+                <button onclick="setMode('MUSIC')" class="hw-btn py-3 text-xs flex justify-between px-4 items-center uppercase">
+                    <div class="led-dot"></div> MUSIC <div id="led-music" class="led-dot"></div>
+                </button>
+                <button onclick="setMode('FLIGHT')" class="hw-btn py-3 text-xs flex justify-between px-4 items-center uppercase">
+                    <div class="led-dot"></div> FLIGHT <div id="led-flight" class="led-dot"></div>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-bold mb-1">START</span>
+                    <button onclick="startPlay()" class="hw-btn w-full h-20 flex items-center justify-center">
+                        <div id="led-start" class="led-dot absolute top-2 right-2"></div>
+                        <div class="icon-start"></div>
+                    </button>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-bold mb-1">STOP</span>
+                    <button onclick="stopAll()" class="hw-btn w-full h-20 flex items-center justify-center">
+                        <div id="led-stop" class="led-dot absolute top-2 right-2"></div>
+                        <div class="icon-stop"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-3 w-28">
+            <div class="inner-frame flex flex-col items-center gap-4 py-6">
+                <span class="text-[10px] font-bold">VOLUME <div id="led-vol" class="led-dot inline-block ml-1"></div></span>
+                <button onclick="changeVolume(0.1)" class="hw-btn w-16 h-16 flex items-center justify-center"><div class="icon-up"></div></button>
+                <button onclick="changeVolume(-0.1)" class="hw-btn w-16 h-16 flex items-center justify-center"><div class="icon-down"></div></button>
+            </div>
+            <div class="inner-frame flex flex-col items-center py-4">
+                <span class="text-[10px] font-bold mb-2 uppercase">Ready</span>
+                <div id="led-ready" class="led-dot"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>

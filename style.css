@@ -1,1 +1,25 @@
-/* Add styles here */
+body { background-color: #2a2a2a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+.lcd-font { font-family: 'VT323', monospace; letter-spacing: 1px; }
+
+/* 메인 패널 디자인 */
+.panel-main { background-color: #e8e4d9; border: 2px solid #c2beb1; box-shadow: inset 2px 2px 10px rgba(255,255,255,0.8), 10px 10px 30px rgba(0,0,0,0.5); width: 680px; }
+.lcd-screen { background-color: #9ab945; color: #1a2a05; border: 5px solid #7d9638; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.4); position: relative; }
+
+/* 버튼 프레임 및 정사각형 키패드 */
+.inner-frame { border: 1.5px solid #b5b1a8; border-radius: 12px; padding: 15px; background: rgba(0,0,0,0.02); }
+.hw-btn { background: #fdfdfd; border: 1.2px solid #999; border-radius: 8px; box-shadow: 0 3px 0 #bbb; transition: all 0.05s; font-weight: bold; position: relative; }
+.hw-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #999; }
+
+/* LED */
+.led-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b5563; border: 1px solid #374151; }
+.led-yellow { background: #facc15; box-shadow: 0 0 8px #facc15; }
+.led-red { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+
+/* 아이콘 */
+.icon-start { width: 0; height: 0; border-left: 10px solid #333; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.icon-stop { width: 12px; height: 12px; background: #333; }
+.icon-up { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 14px solid #333; }
+.icon-down { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid #333; }
+
+.playing-blink { animation: blink 1s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
