@@ -48,9 +48,14 @@ const audio = new Audio();
 audio.volume = 0.5;
 
 function changeVolume(amount) {
-    let newVol = Math.min(1, Math.max(0, audio.volume + amount));
+    // 0.1(10%) 단위로 정교하게 계산 (부동 소수점 오차 방지)
+    let currentVol = Math.round(audio.volume * 10);
+    let step = amount > 0 ? 1 : -1;
+    let newVol = Math.min(10, Math.max(0, currentVol + step)) / 10;
+    
     audio.volume = newVol;
     volDisplay.innerText = `[VOL: ${Math.round(newVol * 100)}%]`;
+    
     const volLed = document.getElementById('led-vol');
     volLed.classList.add('led-yellow');
     setTimeout(() => volLed.classList.remove('led-yellow'), 200);
