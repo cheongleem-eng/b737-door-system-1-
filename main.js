@@ -44,27 +44,52 @@ const flightData = {
 let mode = ''; let input = ''; let selectedTitle = '';
 const lcdText = document.getElementById('lcd-text');
 const volDisplay = document.getElementById('vol-display');
-const audio = new Audio();
 
-// 볼륨을 정수(0~10)로 관리하여 오차 방지
+// 오디오 객체 및 Web Audio API 설정
+const audio = new Audio();
+audio.crossOrigin = "anonymous";
+let audioContext, gainNode, source;
+
+// 볼륨을 0~10 정수로 관리
 let currentVolumeLevel = 5; 
-audio.volume = currentVolumeLevel / 10;
+
+function initAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = audioContext.createGain();
+        source = audioContext.createMediaElementSource(audio);
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        updateVolume();
+    }
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+}
+
+function updateVolume() {
+    if (gainNode) {
+        // gain.value를 0.0 ~ 1.0 사이로 조절
+        gainNode.gain.value = currentVolumeLevel / 10;
+    }
+    // 하위 호환성을 위해 직접 볼륨도 조절 (지원되는 기기용)
+    audio.volume = currentVolumeLevel / 10;
+    
+    if (volDisplay) {
+        volDisplay.innerText = `[VOL: ${currentVolumeLevel * 10}%]`;
+    }
+}
 
 function changeVolume(direction) {
-    // direction이 1이면 증가, -1이면 감소
+    initAudioContext(); // 버튼 클릭 시 오디오 컨텍스트 활성화
+    
     if (direction > 0) {
         if (currentVolumeLevel < 10) currentVolumeLevel++;
     } else {
         if (currentVolumeLevel > 0) currentVolumeLevel--;
     }
     
-    // 실제 오디오 객체에 반영 (0.0 ~ 1.0)
-    audio.volume = currentVolumeLevel / 10;
-    
-    // 화면 표시 (0% ~ 100%)
-    if (volDisplay) {
-        volDisplay.innerText = `[VOL: ${currentVolumeLevel * 10}%]`;
-    }
+    updateVolume();
     
     const volLed = document.getElementById('led-vol');
     if (volLed) {
@@ -74,6 +99,7 @@ function changeVolume(direction) {
 }
 
 function setMode(m) {
+    initAudioContext();
     mode = m; input = ''; selectedTitle = '';
     document.querySelectorAll('.led-dot').forEach(l => {
         if(l.id !== 'led-ready') l.classList.remove('led-yellow', 'led-red');
@@ -87,6 +113,7 @@ function setMode(m) {
 }
 
 function pressNum(n) {
+    initAudioContext();
     if (!mode) return;
     input += n;
     let limit = mode === 'ANNC' ? 3 : 1;
@@ -101,6 +128,7 @@ function pressNum(n) {
 }
 
 function pressEnt() {
+    initAudioContext();
     if (selectedTitle && selectedTitle !== "INVALID NUMBER") {
         lcdText.innerText = `[${input}]\n${selectedTitle}\nPLAY:START NEXT:ENT`;
         const entLed = document.getElementById('led-ent');
@@ -112,6 +140,7 @@ function pressEnt() {
 }
 
 function startPlay() {
+    initAudioContext();
     if (!selectedTitle || selectedTitle === "INVALID NUMBER") return;
     
     audio.src = `audio/${input}.mp3`;
@@ -126,6 +155,7 @@ function startPlay() {
 }
 
 function stopAll() {
+    initAudioContext();
     audio.pause(); audio.currentTime = 0;
     mode = ''; input = ''; selectedTitle = '';
     document.querySelectorAll('.led-dot').forEach(l => {
