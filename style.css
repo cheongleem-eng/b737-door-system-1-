@@ -6,21 +6,21 @@ body { background-color: #2a2a2a; display: flex; justify-content: center; align-
     background-color: #e8e4d9; 
     border: 2px solid #c2beb1; 
     box-shadow: inset 2px 2px 10px rgba(255,255,255,0.8), 10px 10px 30px rgba(0,0,0,0.5); 
-    width: 680px;
+    width: 580px;
     transform-origin: center top;
 }
 
-/* 화면 크기에 따른 자동 축소 */
+/* 화면 크기에 따른 자동 축소 (더 작게 조정) */
 @media (max-width: 700px) {
-    body { align-items: flex-start; padding-top: 20px; }
+    body { align-items: flex-start; padding-top: 10px; }
     .panel-main { 
-        transform: scale(calc(100vw / 720)); 
+        transform: scale(calc(100vw / 650)); 
         margin: 0;
     }
 }
-@media (max-width: 400px) {
+@media (max-width: 450px) {
     .panel-main { 
-        transform: scale(calc(100vw / 700)); 
+        transform: scale(calc(100vw / 620)); 
     }
 }
 
